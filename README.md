@@ -1,6 +1,6 @@
 # The Archive
 
-**Pair:** *(your two names)* **Repository:** *(link)*
+**Pair:** Tumi, Baraka **Repository:** [*(link)*](https://github.com/TSillB/ArchiveAssignment)
 
 > This file is Part E of the assignment — **15 marks**. Replace every placeholder below. Delete the instruction lines in italics as you go. Marks come from the reasoning, not the length.
 
@@ -12,11 +12,11 @@
 
 | Field | Type | Example | If it is unknown, we… |
 | --- | --- | --- | --- |
-| id |  | `MS001` |  |
-| title |  |  |  |
-| city |  |  |  |
-| year |  |  |  |
-| condition |  |  |  |
+| id | STRING | `MS001` |  |
+| title | STRING | `Eridu Genesis` |  |
+| city | STRING | `Timbuktu` |  |
+| year | INTEGER | `1699` |  |
+| condition | STRING | `good` |  |
 
 ---
 
@@ -24,11 +24,11 @@
 
 | Field | Rule(s) | Rejects (example) |
 | --- | --- | --- |
-| id |  |  |
-| title |  |  |
-| city |  |  |
-| year |  |  |
-| condition |  |  |
+| id | First Two Characters : `MS` Followed by 3 digits | `329` |
+| title | At least 3 non-whitespace characters | `   ` |
+| city | Must be among : `timbuktu, djenne, gao, walata, chinguetti` (Case-Insensitive) | `Nairobi` |
+| year | Range : `1100-1900` |  |
+| condition | Must be among : `fair, good, fragile` (Case-Insensitive) | `broken` |
 
 ### Who decided the year range?
 
