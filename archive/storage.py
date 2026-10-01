@@ -41,11 +41,14 @@ def load_archive(path:string) -> tuple[list]:
     try:
         with open(path, "r") as file:
             for line in file:
-                ldict = parse_line(line)
-                if not validate_record(ldict):
+                try:
+                    ldict = parse_line(line)
+                    if not validate_record(ldict):
+                        rejected_records.append(line)
+                    else:
+                        valid_records.append(ldict)
+                except MalformedRecordError:
                     rejected_records.append(line)
-                else:
-                    valid_records.append(ldict)
     except FileNotFoundError:
         return ([],[]);
     return (valid_records, rejected_records)
