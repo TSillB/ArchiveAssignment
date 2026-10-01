@@ -13,50 +13,54 @@ separates fields; the newline separates records. Nothing else is doing
 any work.
 """
 
-from archive.errors import MalformedRecordError
+import string
+from errors import MalformedRecordError
+from validation import validate_record
 
 FIELD_NAMES = ["id", "title", "city", "year", "condition"]
 
 
-def parse_line(line) -> dict:
-    line_array = line.split()
+def parse_line(line:string) -> dict:
+    line_array = line.strip().split(",")
     if len(line_array) != 5:
         raise MalformedRecordError
+    for i in range(len(line_array)):
+        line_array[i] = line_array[i].strip()
     line_dict = {
         "id": line_array[0], 
         "title": line_array[1], 
         "city": line_array[2], 
         "year":line_array[3], 
-        "condition":line_array[4]
+        "condition":line_array[4],
     }
     return line_dict
-    raise NotImplementedError("parse_line")
 
 
-def load_archive(path):
-    """Read the file at `path` and return (valid_records, rejected_lines).
-
-    valid_records   list of dicts that passed validate_record
-    rejected_lines  list of the ORIGINAL line strings that did not — either
-                    because they were malformed, or because validation
-                    rejected them
-
-    A file that does not exist is not an error. It means the archive is new.
-    Return ([], []) and DO NOT raise. Your program must start on a machine
-    where nobody has saved anything yet.
-
-    Blank lines are skipped silently.
-
-    Returns (list, list).
-    """
+def load_archive(path:string) -> tuple[list]:
+    valid_records = []; rejected_records = []
+    try:
+        with open(path, "r") as file:
+            for line in file:
+                ldict = parse_line(line)
+                if not validate_record(ldict):
+                    rejected_records.append(ldict)
+                else:
+                    valid_records.append(ldict)
+    except FileNotFoundError:
+        return ([],[]);
+    return (valid_records, rejected_records)
     raise NotImplementedError("load_archive")
 
 
-def save_archive(path, records):
-    """Write every record to `path` as CSV, one per line, no header.
-
-    Field order is FIELD_NAMES. The file is overwritten, not appended to.
-
-    Returns None.
-    """
-    raise NotImplementedError("save_archive")
+def save_archive(path:string, records:list[dict]):
+    path += "/archive.csv"
+    with open(path, "a") as file:
+        for record in records:
+            record_list:list[string] = []
+            for field in FIELD_NAMES:
+                record_list.append(record[field])
+                record_list.append(",")
+            if (len(record_list) > 0):
+                record_list.pop()
+                record_list.append("\n")
+                file.writelines(record_list)

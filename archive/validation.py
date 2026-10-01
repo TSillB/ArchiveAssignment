@@ -18,7 +18,7 @@ The year range is INCLUSIVE at both ends: 1100 and 1900 are VALID.
 1099 and 1901 are not. Most marks lost in Part A are lost on that line.
 """
 
-from archive.errors import MalformedRecordError  # noqa: F401  (you may not need it here)
+from errors import MalformedRecordError  # noqa: F401  (you may not need it here)
 
 KNOWN_CITIES = ["Timbuktu", "Djenne", "Gao", "Walata", "Chinguetti"]
 
