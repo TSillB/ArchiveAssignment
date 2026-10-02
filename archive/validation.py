@@ -36,8 +36,22 @@ def validate_id(value):
 
     Returns (bool, str).
     """
-    h
-    raise NotImplementedError("validate_id")
+    Id = bool()
+    message_Id = ""
+
+    if value == "":
+        Id = False
+        message_Id = "Id absent"
+    
+    if len(value)!= 5:
+        Id = False
+        message_id = "Id not 5 characters"
+    
+    if value[:2] not "MS" OR (int(value[3:])<=0 OR int(value[3:]>999)):
+        Id = False
+        message_Id = "Invalid Id"
+
+    # raise NotImplementedError("validate_id")
 
 
 def validate_title(value):
@@ -75,7 +89,27 @@ def validate_year(value):
 
     Returns (bool, str).
     """
-    raise NotImplementedError("validate_year")
+    year = bool()
+    message_year = ""
+
+    if value == "":
+        year = False
+        message_year = "Year is absent"
+
+    if type(value) is int:
+        year = True
+    else:
+        year = False
+        message_year = "Wrong datatype"
+
+    if int(value) < MIN_YEAR AND int(value) > MAX_YEAR:
+        year = False
+        message_year = "Year outside range"
+    else:
+        year = True
+     
+    return year, message_year
+    # raise NotImplementedError("validate_year")
 
 
 def validate_condition(value):
@@ -86,7 +120,21 @@ def validate_condition(value):
 
     Returns (bool, str).
     """
-    raise NotImplementedError("validate_condition")
+    condition = bool()
+    message_condition = ""
+
+    if value == "":
+        condition = False
+        message_condition = "Condition absent"
+    
+    if value.lower() not in VALID_CONDITIONS:
+        condition = False
+        message_condition = "Invalid condition"
+    else:
+        condition = True
+
+    return condition, message_condition
+    # raise NotImplementedError("validate_condition")
 
 
 def validate_record(record):
