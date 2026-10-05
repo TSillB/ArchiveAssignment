@@ -24,7 +24,7 @@ KNOWN_CITIES = ["Timbuktu", "Djenne", "Gao", "Walata", "Chinguetti"]
 
 VALID_CONDITIONS = ["fragile", "fair", "good"]
 
-MIN_YEAR = 1100
+MIN_YEAR = 600
 MAX_YEAR = 1900
 
 
@@ -39,18 +39,28 @@ def validate_id(value):
     Id = bool()
     message_Id = ""
 
-    if value == "":
+    if value.strip() == "":
         Id = False
-        message_Id = "Id absent"
+        message_Id = "Id not found"
     
     if len(value)!= 5:
         Id = False
-        message_id = "Id not 5 characters"
-    
-    if value[:2] not "MS" OR (int(value[3:])<=0 OR int(value[3:]>999)):
+        message_Id = "Id not 5 characters"
+
+    try:
+        int(value[3:])
+        Id = True
+    except ValueError:
+        Id = False
+        message_Id = "Invalid Id number" 
+
+    if value[:2] != "MS" or (int(value[3:])<=0 or int(value[3:])>999):
         Id = False
         message_Id = "Invalid Id"
-
+    else:
+        Id = True
+    
+    return Id, message_Id
     # raise NotImplementedError("validate_id")
 
 
@@ -62,7 +72,22 @@ def validate_title(value):
 
     Returns (bool, str).
     """
-    raise NotImplementedError("validate_title")
+    title = bool()
+    message_title = ""
+
+    # if value.strip() == "":
+    #     title = False
+    #     message_title = "Title not found"
+
+    if value.strip() and len(value.strip()>=3):
+        title = True
+    else:
+        title = False
+        message_title = "Title too short"
+
+
+    return title, message_title
+    # raise NotImplementedError("validate_title")
 
 
 def validate_city(value):
@@ -74,7 +99,21 @@ def validate_city(value):
 
     Returns (bool, str).
     """
-    raise NotImplementedError("validate_city")
+    city = bool()
+    message_city = ""
+
+    if value.strip() == "":
+        city = False
+        message_city = "No city found"
+
+    if value not in KNOWN_CITIES:
+        city = False
+        message_city = "Invalid city"
+    else:
+        city = True
+
+    return city, message_city
+    # raise NotImplementedError("validate_city")
 
 
 def validate_year(value):
@@ -96,13 +135,14 @@ def validate_year(value):
         year = False
         message_year = "Year is absent"
 
-    if type(value) is int:
+    try:
+        int(value)
         year = True
-    else:
+    except ValueError:
         year = False
-        message_year = "Wrong datatype"
+        message_year  = "Invalid year"
 
-    if int(value) < MIN_YEAR AND int(value) > MAX_YEAR:
+    if int(value) < MIN_YEAR and int(value) > MAX_YEAR:
         year = False
         message_year = "Year outside range"
     else:
