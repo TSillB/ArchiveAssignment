@@ -16,6 +16,7 @@ any work.
 import string
 from errors import MalformedRecordError
 from validation import validate_record
+from queries import *
 
 FIELD_NAMES = ["id", "title", "city", "year", "condition"]
 
