@@ -27,21 +27,20 @@ def load_archive(path:string) -> tuple[list]:
         with open(path, "r") as file:
             for line in file:
                 ldict = parse_line(line)
-                if not validate_record(ldict):
+                if len(validate_record(ldict)) > 0:
                     rejected_records.append(ldict)
                 else:
                     valid_records.append(ldict)
     except FileNotFoundError:
         return ([],[]);
     return (valid_records, rejected_records)
-    raise NotImplementedError("load_archive")
 
 
 def save_archive(path:string, records:list[dict]):
     path += "/archive.csv"
     with open(path, "a") as file:
         for record in records:
-            record_list:list[string] = []
+            record_list = []
             for field in FIELD_NAMES:
                 record_list.append(record[field])
                 record_list.append(",")
