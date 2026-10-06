@@ -20,7 +20,7 @@ The year range is INCLUSIVE at both ends: 1100 and 1900 are VALID.
 
 from archive.errors import MalformedRecordError  # noqa: F401  (you may not need it here)
 
-KNOWN_CITIES = ["Timbuktu", "Djenne", "Gao", "Walata", "Chinguetti"]
+KNOWN_CITIES = ["timbuktu", "djenne", "gao", "walata", "chinguetti"]
 
 VALID_CONDITIONS = ["fragile", "fair", "good"]
 
@@ -36,32 +36,24 @@ def validate_id(value):
 
     Returns (bool, str).
     """
-    Id = bool()
-    message_Id = ""
-
-    if value.strip() == "":
-        Id = False
-        message_Id = "Id not found"
+    if value is None or str(value).strip() == "":
+        return False, "Id not found"
     
     if len(value)!= 5:
-        Id = False
-        message_Id = "Id not 5 characters"
+        return False, "Id not 5 characters"
 
     try:
-        int(value[3:])
-        Id = True
+        int(value[2:])
     except ValueError:
-        Id = False
-        message_Id = "Invalid Id number" 
+        return False, "Invalid Id number"
 
-    if value[:2] != "MS" or (int(value[3:])<=0 or int(value[3:])>999):
-        Id = False
-        message_Id = "Invalid Id"
-    else:
-        Id = True
+    if not value.startswith("MS"):
+        return False, "Invalid Id format"
     
-    return Id, message_Id
-    # raise NotImplementedError("validate_id")
+    if (int(value[2:])<=0 or int(value[2:])>999):
+        return False, "Id number out of range"
+    
+    return (True, "")
 
 
 def validate_title(value):
@@ -72,22 +64,14 @@ def validate_title(value):
 
     Returns (bool, str).
     """
-    title = bool()
-    message_title = ""
 
-    # if value.strip() == "":
-    #     title = False
-    #     message_title = "Title not found"
+    if value is None or str(value).strip() == "":
+        return False, "Title not found"
 
-    if value.strip() and len(value.strip()>=3):
-        title = True
-    else:
-        title = False
-        message_title = "Title too short"
+    if len(value.strip())<3:
+        return False, "Title too short"
 
-
-    return title, message_title
-    # raise NotImplementedError("validate_title")
+    return (True, "")
 
 
 def validate_city(value):
@@ -99,21 +83,14 @@ def validate_city(value):
 
     Returns (bool, str).
     """
-    city = bool()
-    message_city = ""
 
-    if value.strip() == "":
-        city = False
-        message_city = "No city found"
+    if value is None or str(value).strip() == "":
+        return False, "City not found"
 
-    if value not in KNOWN_CITIES:
-        city = False
-        message_city = "Invalid city"
-    else:
-        city = True
+    if value.lower() not in KNOWN_CITIES: # I updated KNOWN_CITIES for all elements to be lowercase for easier comparison
+        return False, "Invalid city"
 
-    return city, message_city
-    # raise NotImplementedError("validate_city")
+    return (True, "")
 
 
 def validate_year(value):
@@ -128,28 +105,19 @@ def validate_year(value):
 
     Returns (bool, str).
     """
-    year = bool()
-    message_year = ""
 
-    if value == "":
-        year = False
-        message_year = "Year is absent"
+    if value is None or str(value).strip() == "":
+        return False, "Year not found"
 
     try:
         int(value)
-        year = True
     except ValueError:
-        year = False
-        message_year  = "Invalid year"
+        return False, "Invalid year"
 
-    if int(value) < MIN_YEAR and int(value) > MAX_YEAR:
-        year = False
-        message_year = "Year outside range"
-    else:
-        year = True
+    if int(value) < MIN_YEAR or int(value) > MAX_YEAR:
+        return False, "Year outside range"
      
-    return year, message_year
-    # raise NotImplementedError("validate_year")
+    return (True, "")
 
 
 def validate_condition(value):
@@ -160,21 +128,13 @@ def validate_condition(value):
 
     Returns (bool, str).
     """
-    condition = bool()
-    message_condition = ""
-
-    if value == "":
-        condition = False
-        message_condition = "Condition absent"
+    if value is None or str(value).strip() == "":
+        return False, "Condition not found"
     
     if value.lower() not in VALID_CONDITIONS:
-        condition = False
-        message_condition = "Invalid condition"
-    else:
-        condition = True
+        return False, "Invalid condition"
 
-    return condition, message_condition
-    # raise NotImplementedError("validate_condition")
+    return (True, "")
 
 
 def validate_record(record):
@@ -188,4 +148,22 @@ def validate_record(record):
 
     Do not re-write the rules here. Call the five functions above.
     """
-    raise NotImplementedError("validate_record")
+    invalid_list = []  
+
+    result = validate_id(record["id"])
+    if not result[0]:
+        invalid_list.append(result[1])
+    result = validate_title(record["title"])
+    if not result[0]:
+        invalid_list.append(result[1])
+    result = validate_city(record["city"])
+    if not result[0]:
+        invalid_list.append(result[1])
+    result = validate_year(record["year"])
+    if not result[0]:
+        invalid_list.append(result[1])
+    result = validate_condition(record["condition"])
+    if not result[0]:
+        invalid_list.append(result[1])
+        
+    return invalid_list
