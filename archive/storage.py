@@ -1,6 +1,7 @@
 import string
 from errors import MalformedRecordError
 from validation import validate_record
+from queries import *
 
 FIELD_NAMES = ["id", "title", "city", "year", "condition"]
 
@@ -26,11 +27,14 @@ def load_archive(path:string) -> tuple[list]:
     try:
         with open(path, "r") as file:
             for line in file:
-                ldict = parse_line(line)
-                if len(validate_record(ldict)) > 0:
-                    rejected_records.append(ldict)
-                else:
-                    valid_records.append(ldict)
+                try:
+                    ldict = parse_line(line)
+                    if len(validate_record(ldict)) > 0:
+                        rejected_records.append(ldict)
+                    else:
+                        valid_records.append(ldict)
+                except MalformedRecordError:
+                    rejected_records.append(line)
     except FileNotFoundError:
         return ([],[]);
     return (valid_records, rejected_records)
