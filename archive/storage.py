@@ -29,8 +29,8 @@ def load_archive(path:string) -> tuple[list]:
             for line in file:
                 try:
                     ldict = parse_line(line)
-                    if not validate_record(ldict):
-                        rejected_records.append(line)
+                    if len(validate_record(ldict)) > 0:
+                        rejected_records.append(ldict)
                     else:
                         valid_records.append(ldict)
                 except MalformedRecordError:
@@ -44,7 +44,7 @@ def save_archive(path:string, records:list[dict]):
     path += "/archive.csv"
     with open(path, "a") as file:
         for record in records:
-            record_list:list[string] = []
+            record_list = []
             for field in FIELD_NAMES:
                 record_list.append(record[field])
                 record_list.append(",")
