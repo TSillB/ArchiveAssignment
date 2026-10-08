@@ -27,12 +27,11 @@
 | id | First Two Characters : `MS` Followed by 3 digits | `329` |
 | title | At least 3 non-whitespace characters | `   ` |
 | city | Must be among : `timbuktu, djenne, gao, walata, chinguetti` (Case-Insensitive) | `Nairobi` |
-| year | Range : `1100-1900` |  |
+| year | Range : `600-1900` | `-230` |
 | condition | Must be among : `fair, good, fragile` (Case-Insensitive) | `broken` |
 
 ### Who decided the year range?
-
-*The brief gave you 1100–1900. That was a decision someone made, and it has costs. 1900 excludes a modern copy of an old text. 1100 excludes anything earlier. State whether you accept these bounds or would change them, and say what your choice throws away. An undefended range scores 1 of the 4 marks.*
+We chose the range 600-1900 (CE) as the earliest of these cities was estimated to be made around 600 (CE) and of these Timbuktu and Chinguetti remain somewhat intact to this day but as our aim is to catalog historic manuscripts we choose to limit the year to 1900 (CE) which allows for semi-recent texts to be catalogued while not undermining the ancient writing with texts from the 20th and 21st century which had major influences from rapid industrialisation.
 
 ---
 
@@ -47,10 +46,13 @@
 - **(c)** Store `1590` plus a separate `approximate` flag.
 
 **Our choice:**
+- **(a)** Reject it. Only exact years enter the catalogue.
 
 **Why:**
+This allows us to keep a trustable and accurate archive which can be cited/used reliably without need to do extensive background review of the information stored.
 
 **What it costs us:**
+Many important texts are likely to be rejected as the date in which they were written may have been lost throughout its history.
 
 ---
 
@@ -61,11 +63,11 @@
 | Test data | Value | Expected | Actual | Pass? |
 | --- | --- | --- | --- | --- |
 | Normal | 1655 | valid |  |  |
-| Abnormal |  |  |  |  |
-| Extreme (low) | 1100 | valid |  |  |
-| Extreme (high) |  |  |  |  |
-| Boundary (below) | 1099 | invalid |  |  |
-| Boundary (above) |  |  |  |  |
+| Abnormal | -2839 | invalid  |  |  |
+| Extreme (low) | 600 | valid |  |  |
+| Extreme (high) | 1900 | valid  |  |  |
+| Boundary (below) | 599 | invalid |  |  |
+| Boundary (above) | 1901 | invalid  |  |  |
 
 ### `_______________` *(one other field of your choice)*
 
